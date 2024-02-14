@@ -11,7 +11,7 @@ from pathlib import Path
 import os
 from tqdm import tqdm
 
-@hydra.main(config_path="/home/lyu/LTR/config", config_name="explain")   # read the config file (explain.yaml) under config.
+@hydra.main(config_path="your-project-path/config", config_name="explain")   # read the config file (explain.yaml) under config.
 def main(config: DictConfig) -> None:
     seed_everything(config.random_seed, workers=True)
     

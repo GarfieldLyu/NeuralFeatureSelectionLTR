@@ -8,7 +8,7 @@ from pytorch_lightning import seed_everything
 import json
 from pathlib import Path
 
-@hydra.main(config_path="/home/lyu/LTR/config", config_name="train")  # read the config file (train.yaml) under config.
+@hydra.main(config_path="your-project-path/config", config_name="train")  # read the config file (train.yaml) under config.
 def main(config: DictConfig) -> None:
     seed_everything(config.random_seed, workers=True)
     
