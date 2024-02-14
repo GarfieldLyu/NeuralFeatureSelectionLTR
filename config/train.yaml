@@ -1,0 +1,42 @@
+defaults:
+  - _self_
+  - models: ???
+  - datasets: ???
+  - train_mode: ???
+global_mask: None
+global_mask_ratio: 0
+version: 0  # 0 by default, for generating global feature mask.
+mask_dir: None
+mask_file: feature_importances.json
+random_seed: 123
+is_lassonet: False
+gpus: 0
+rank_loss: ${train_mode.rank_loss}
+output_dim: 1
+
+trainer:
+  _target_: pytorch_lightning.Trainer
+  detect_anomaly: True
+  deterministic: True
+  strategy: ddp 
+  gpus: ${gpus}
+  max_epochs: 20
+  limit_train_batches: 1.0
+  default_root_dir: ${datasets.trained_fold}/${train_mode.mode}/${models.trained_fold}/${models.model_name}
+  
+  callbacks:
+    - _target_: pytorch_lightning.callbacks.EarlyStopping
+      monitor: validation_ndcg@10
+      mode: max
+      patience: 10
+      verbose: True
+    - _target_: pytorch_lightning.callbacks.ModelCheckpoint
+      monitor: validation_ndcg@10
+      mode: max
+      verbose: True
+
+
+hydra:
+  sweep:
+    dir: multirun
+    subdir: ${hydra.job.override_dirname}
